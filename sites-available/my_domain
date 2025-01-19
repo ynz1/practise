@@ -1,0 +1,36 @@
+server {	
+
+	listen 80;
+
+	root /usr/share/nginx/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	
+	location /content.html {
+		proxy_pass http://$host:81 ;
+	}
+	
+	location /image1 {
+		try_files $uri/cat.jpg =404;
+	}
+	
+	location /image2 {
+		try_files $uri/cat.png =404;
+		image_filter_buffer 12M;
+		image_filter rotate 180;
+	}
+}
+
+server {
+	listen 81;
+
+	root /usr/share/nginx/html;
+    index content.html;
+
+	location / {
+	try_files $uri $uri/ = 404 ;
+	}
+}
