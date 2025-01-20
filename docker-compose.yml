@@ -1,0 +1,11 @@
+services:
+  nginx:
+    image: alpine:latest
+    ports:
+      - "8080:80"
+      - "81:81"
+    volumes:
+      - ./html:/usr/share/nginx/html
+      - ./nginx/sites-available/my_domain:/etc/nginx/sites-available/my_domain
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    entrypoint: /bin/sh -c "apk add --no-cache nginx nginx-mod-http-image-filter && mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && ln -sf /etc/nginx/sites-available/my_domain /etc/nginx/sites-enabled/my_domain && nginx -g 'daemon off;'"
